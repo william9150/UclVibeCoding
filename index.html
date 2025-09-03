@@ -1,0 +1,354 @@
+<!DOCTYPE html>
+<html lang="zh-Hant" class="scroll-smooth">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>UCL Vibe Coding 體驗挑戰賽</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+TC:wght@400;500;700&display=swap" rel="stylesheet" />
+    <style>
+      body {
+        font-family: "Noto Sans TC", sans-serif;
+        background-color: #f5f5f3;
+        color: #333333;
+      }
+      .chart-container {
+        position: relative;
+        width: 100%;
+        max-width: 400px;
+        margin-left: auto;
+        margin-right: auto;
+        height: 300px;
+        max-height: 400px;
+      }
+      @media (min-width: 768px) {
+        .chart-container {
+          height: 350px;
+        }
+      }
+      .section-card {
+        background-color: #ffffff;
+        border-radius: 1rem;
+        padding: 2rem;
+        box-shadow: 0 4px 6px -1px rgb(0 0 0 / 0.1), 0 2px 4px -2px rgb(0 0 0 / 0.1);
+        transition: transform 0.3s ease, box-shadow 0.3s ease;
+      }
+      .section-card:hover {
+        transform: translateY(-5px);
+        box-shadow: 0 10px 15px -3px rgb(0 0 0 / 0.1), 0 4px 6px -4px rgb(0 0 0 / 0.1);
+      }
+      .nav-link {
+        transition: color 0.3s;
+      }
+      .nav-link:hover {
+        color: #2f7a7a;
+      }
+      .timeline-item-content {
+        transition: all 0.3s ease;
+        max-height: 0;
+        overflow: hidden;
+      }
+      .timeline-item.active .timeline-item-content {
+        max-height: 100px;
+        margin-top: 0.5rem;
+      }
+    </style>
+  </head>
+  <body class="antialiased">
+    <!-- Header & Navigation -->
+    <header id="header" class="bg-white/80 backdrop-blur-md sticky top-0 z-50 shadow-sm">
+      <nav class="container mx-auto px-6 py-3 flex justify-between items-center">
+        <div class="text-xl font-bold text-gray-800">UCL Vibe Coding 挑戰賽</div>
+        <div class="hidden md:flex space-x-8">
+          <a href="#purpose" class="nav-link text-gray-600">活動目的</a>
+          <a href="#details" class="nav-link text-gray-600">活動詳情</a>
+          <a href="#rewards" class="nav-link text-gray-600">評分與獎勵</a>
+          <a href="#impact" class="nav-link text-gray-600">預期效益</a>
+        </div>
+      </nav>
+    </header>
+
+    <main class="container mx-auto px-6 py-8 md:py-16">
+      <!-- Hero Section -->
+      <section class="text-center mb-16 md:mb-24">
+        <h1 class="text-4xl md:text-6xl font-bold text-gray-900 mb-4">UCL Vibe Coding 體驗挑戰賽</h1>
+        <p class="text-xl md:text-2xl text-teal-700 font-medium">與 AI 對話，輕鬆探索未來</p>
+        <p class="mt-4 max-w-3xl mx-auto text-gray-600">
+          這是一場寓教於樂的活動，讓全公司同仁輕鬆體驗 AI 技術，並透過比賽與合作增進彼此情感。不需要任何程式基礎，也能在短時間內完成作品，並有機會獲得現金獎勵。
+        </p>
+      </section>
+
+      <!-- Section 1: Purpose -->
+      <section id="purpose" class="mb-16 md:mb-24">
+        <h2 class="text-3xl font-bold text-center mb-12">為何舉辦？探索 AI 新時代</h2>
+        <div class="grid md:grid-cols-2 lg:grid-cols-4 gap-8">
+          <div class="section-card text-center">
+            <div class="text-4xl mb-4">💡</div>
+            <h3 class="text-xl font-bold mb-2">了解新趨勢</h3>
+            <p class="text-gray-600">讓員工親身體驗 AI 技術，了解如何應用於工作，提升效率。</p>
+          </div>
+          <div class="section-card text-center">
+            <div class="text-4xl mb-4">🤝</div>
+            <h3 class="text-xl font-bold mb-2">跨部門合作</h3>
+            <p class="text-gray-600">鼓勵同仁自由組隊，激發合作火花，增進團隊默契。</p>
+          </div>
+          <div class="section-card text-center">
+            <div class="text-4xl mb-4">🏆</div>
+            <h3 class="text-xl font-bold mb-2">享受趣味挑戰</h3>
+            <p class="text-gray-600">透過輕鬆的競賽完成任務，在遊戲化的氛圍中學習成長。</p>
+          </div>
+          <div class="section-card text-center">
+            <div class="text-4xl mb-4">🏅</div>
+            <h3 class="text-xl font-bold mb-2">爭取榮譽激勵</h3>
+            <p class="text-gray-600">提供實質獎勵，激發參與動機與成就感，點燃工作熱情。</p>
+          </div>
+        </div>
+      </section>
+
+      <!-- Section 2: Details -->
+      <section id="details" class="mb-16 md:mb-24">
+        <h2 class="text-3xl font-bold text-center mb-12">活動詳情</h2>
+        <div class="grid lg:grid-cols-5 gap-8 lg:gap-12">
+          <div class="lg:col-span-3 section-card">
+            <h3 class="text-2xl font-bold mb-6 text-center">活動流程 (互動式時間軸)</h3>
+            <p class="text-center text-gray-500 mb-6">點擊或滑鼠移至各階段查看詳情</p>
+            <div id="timeline" class="relative border-l-2 border-teal-200 ml-3">
+              <!-- Timeline Items will be injected by JS -->
+            </div>
+          </div>
+          <div class="lg:col-span-2 space-y-6">
+            <div class="section-card">
+              <h3 class="text-xl font-bold mb-4">基本資訊</h3>
+              <ul class="space-y-3 text-gray-700">
+                <li><strong>對象：</strong>全體員工 (不需程式背景！)</li>
+                <li><strong>時間：</strong>一個下午，共 4 小時</li>
+                <li><strong>地點：</strong>公司會議室 / 資訊室</li>
+                <li><strong>方式：</strong>1～3 人自由組隊</li>
+              </ul>
+            </div>
+            <div class="section-card">
+              <h3 class="text-xl font-bold mb-4">所需工具</h3>
+              <ul class="space-y-3 text-gray-700">
+                <li><strong>AI 協作：</strong>Gemini CLI, ChatGPT</li>
+                <li><strong>開發環境：</strong>VS Code</li>
+                <li><strong>硬體：</strong>各組自備筆記型電腦</li>
+              </ul>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- Section 3: Rewards -->
+      <section id="rewards" class="mb-16 md:mb-24">
+        <h2 class="text-3xl font-bold text-center mb-12">如何脫穎而出：評分與獎勵</h2>
+        <div class="grid lg:grid-cols-2 gap-8 lg:gap-12 items-center">
+          <div class="section-card">
+            <h3 class="text-2xl font-bold mb-6 text-center">評分標準</h3>
+            <div class="chart-container">
+              <canvas id="scoringChart"></canvas>
+            </div>
+          </div>
+          <div class="section-card">
+            <h3 class="text-2xl font-bold mb-6 text-center">豐厚獎勵</h3>
+            <div class="space-y-4">
+              <div class="p-4 bg-yellow-100 border-l-4 border-yellow-400 rounded-r-lg">
+                <p class="font-bold text-lg">🥇 第一名：現金 3,000 元</p>
+              </div>
+              <div class="p-4 bg-gray-100 border-l-4 border-gray-400 rounded-r-lg">
+                <p class="font-bold text-lg">🥈 第二名：現金 2,000 元</p>
+              </div>
+              <div class="p-4 bg-orange-100 border-l-4 border-orange-400 rounded-r-lg">
+                <p class="font-bold text-lg">🥉 第三名：現金 1,000 元</p>
+              </div>
+              <div class="p-4 bg-teal-100 border-l-4 border-teal-400 rounded-r-lg">
+                <p class="font-bold text-lg">✨ 特別獎 (最佳創意)：現金 1,000 元</p>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- Section 4: Impact -->
+      <section id="impact" class="mb-16 md:mb-24">
+        <h2 class="text-3xl font-bold text-center mb-12">預算與預期效益</h2>
+        <div class="grid lg:grid-cols-2 gap-8 lg:gap-12 items-center">
+          <div class="section-card order-2 lg:order-1">
+            <h3 class="text-2xl font-bold mb-6 text-center">預期效益</h3>
+            <ul class="space-y-4">
+              <li class="flex items-start">
+                <span class="text-teal-500 mr-3 mt-1">✓</span>
+                <div><strong class="font-semibold">技能提升：</strong>員工了解 AI 實際應用，提升數位素養。</div>
+              </li>
+              <li class="flex items-start">
+                <span class="text-teal-500 mr-3 mt-1">✓</span>
+                <div><strong class="font-semibold">團隊合作：</strong>促進跨部門交流，發揮彼此優勢，共同解決問題。</div>
+              </li>
+              <li class="flex items-start">
+                <span class="text-teal-500 mr-3 mt-1">✓</span>
+                <div><strong class="font-semibold">凝聚向心力：</strong>遊戲化設計與獎勵，提升員工參與感與歸屬感。</div>
+              </li>
+              <li class="flex items-start">
+                <span class="text-teal-500 mr-3 mt-1">✓</span>
+                <div><strong class="font-semibold">公司形象：</strong>展現公司擁抱新科技、推動數位化的積極態度。</div>
+              </li>
+            </ul>
+          </div>
+          <div class="section-card order-1 lg:order-2">
+            <h3 class="text-2xl font-bold mb-2 text-center">預算規劃</h3>
+            <p class="text-center text-gray-500 mb-4">(以 30 人為例，總計約 12,000 元)</p>
+            <div class="chart-container">
+              <canvas id="budgetChart"></canvas>
+            </div>
+          </div>
+        </div>
+      </section>
+    </main>
+
+    <!-- Footer -->
+    <footer class="bg-white border-t">
+      <div class="container mx-auto px-6 py-8 text-center text-gray-600">
+        <h3 class="text-2xl font-bold mb-4">準備好接受挑戰了嗎？</h3>
+        <p>不需要任何程式基礎，只要您有想法，就能創造無限可能！<br />誠摯邀請大家一同參與！</p>
+      </div>
+    </footer>
+
+    <script>
+      document.addEventListener("DOMContentLoaded", function () {
+        // Scoring Chart
+        const scoringCtx = document.getElementById("scoringChart").getContext("2d");
+        new Chart(scoringCtx, {
+          type: "doughnut",
+          data: {
+            labels: ["功能完成度", "視覺設計", "創意表現", "時間管理"],
+            datasets: [
+              {
+                data: [60, 20, 10, 10],
+                backgroundColor: ["#2F7A7A", "#63A5A5", "#97CFCF", "#CBE9E9"],
+                borderColor: "#FFFFFF",
+                borderWidth: 2,
+                hoverOffset: 4,
+              },
+            ],
+          },
+          options: {
+            responsive: true,
+            maintainAspectRatio: false,
+            plugins: {
+              legend: {
+                position: "bottom",
+              },
+              tooltip: {
+                callbacks: {
+                  label: function (context) {
+                    let label = context.label || "";
+                    if (label) {
+                      label += ": ";
+                    }
+                    if (context.parsed !== null) {
+                      label += context.parsed + "%";
+                    }
+                    return label;
+                  },
+                },
+              },
+            },
+          },
+        });
+
+        // Budget Chart
+        const budgetCtx = document.getElementById("budgetChart").getContext("2d");
+        new Chart(budgetCtx, {
+          type: "pie",
+          data: {
+            labels: ["獎金 (7,000元)", "茶點飲料 (4,500元)", "活動物資 (500元)"],
+            datasets: [
+              {
+                data: [7000, 4500, 500],
+                backgroundColor: ["#2F7A7A", "#63A5A5", "#97CFCF"],
+                borderColor: "#FFFFFF",
+                borderWidth: 2,
+                hoverOffset: 4,
+              },
+            ],
+          },
+          options: {
+            responsive: true,
+            maintainAspectRatio: false,
+            plugins: {
+              legend: {
+                position: "bottom",
+              },
+              tooltip: {
+                callbacks: {
+                  label: function (context) {
+                    let label = context.label || "";
+                    return label;
+                  },
+                },
+              },
+            },
+          },
+        });
+
+        // Interactive Timeline
+        const timelineData = [
+          { time: "0:00 – 0:15", title: "活動開場", description: "主持人介紹目的、規則與獎勵" },
+          { time: "0:15 – 0:35", title: "Vibe Coding 示範", description: "現場展示如何用 AI + 工具完成作品" },
+          { time: "0:35 – 0:45", title: "老闆抽題", description: "由老闆抽出本次挑戰賽題目" },
+          { time: "0:45 – 2:45", title: "挑戰開始！", description: "各組發揮創意，利用 AI 與工具完成作品" },
+          { time: "2:45 – 3:00", title: "匿名交件", description: "各組以「隨機編號」提交，確保評分公平" },
+          { time: "3:00 – 3:40", title: "作品展示與評分", description: "依編號展示成果，由評審團現場給分" },
+          { time: "3:40 – 4:00", title: "公布名次與頒獎", description: "公布最終名次，頒獎與合照" },
+        ];
+
+        const timelineContainer = document.getElementById("timeline");
+        timelineData.forEach((item) => {
+          const timelineItem = document.createElement("div");
+          timelineItem.className = "timeline-item mb-8 ml-6 cursor-pointer";
+          timelineItem.innerHTML = `
+                    <span class="absolute flex items-center justify-center w-4 h-4 bg-teal-100 rounded-full -left-2 ring-4 ring-white"></span>
+                    <h4 class="font-bold text-gray-800">${item.title} <span class="text-sm font-medium text-teal-600">(${item.time})</span></h4>
+                    <p class="timeline-item-content text-sm text-gray-600">${item.description}</p>
+                `;
+          timelineContainer.appendChild(timelineItem);
+        });
+
+        const timelineItems = document.querySelectorAll(".timeline-item");
+        timelineItems.forEach((item) => {
+          const toggleItem = () => {
+            const currentlyActive = document.querySelector(".timeline-item.active");
+            if (currentlyActive && currentlyActive !== item) {
+              currentlyActive.classList.remove("active");
+            }
+            item.classList.toggle("active");
+          };
+
+          item.addEventListener("click", toggleItem);
+          item.addEventListener("mouseenter", () => {
+            if (!item.classList.contains("active")) {
+              item.classList.add("active");
+            }
+          });
+          item.addEventListener("mouseleave", () => {
+            if (item.classList.contains("active")) {
+              item.classList.remove("active");
+            }
+          });
+        });
+
+        // Smooth scrolling for nav links
+        document.querySelectorAll('a[href^="#"]').forEach((anchor) => {
+          anchor.addEventListener("click", function (e) {
+            e.preventDefault();
+            document.querySelector(this.getAttribute("href")).scrollIntoView({
+              behavior: "smooth",
+            });
+          });
+        });
+      });
+    </script>
+  </body>
+</html>
