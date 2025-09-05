@@ -31,8 +31,15 @@
         height: 300px;
         max-height: 400px;
       }
+      .bonus-container {
+        height: 300px;
+        max-height: 400px;
+      }
       @media (min-width: 768px) {
         .chart-container {
+          height: 350px;
+        }
+        .bonus-container {
           height: 350px;
         }
       }
@@ -194,14 +201,37 @@
 
       <!-- Section 3: Competition Topics -->
       <section id="topics" class="mb-16 md:mb-24 scroll-mt-20">
-        <h2 class="text-3xl font-bold text-center mb-12">比賽題目範例</h2>
-        <p class="text-center text-gray-600 max-w-2xl mx-auto mb-10">老闆將從題庫中隨機抽選一題作為本次挑戰主題。以下為題目範例，讓大家先睹為快！</p>
-        <div class="section-card">
-          <div class="flex flex-wrap justify-center gap-2 mb-8" id="topic-buttons">
-            <!-- Topic buttons will be injected by JS -->
+        <h2 class="text-3xl font-bold text-center mb-12">比賽題目</h2>
+        <p class="text-center text-gray-600 max-w-2xl mx-auto mb-10">老闆將從題庫中隨機抽選一題作為本次挑戰主題。正式題目將於活動當天公布，敬請期待！</p>
+        <div class="section-card text-center">
+          <div id="countdown-wrapper">
+            <h3 class="text-2xl font-bold text-gray-500 mb-4">題目公布倒數</h3>
+            <div id="countdown" class="flex justify-center space-x-2 md:space-x-6 text-teal-700">
+              <div class="text-center p-2">
+                <span id="days" class="text-4xl md:text-5xl font-bold">0</span>
+                <span class="block text-sm mt-1">天</span>
+              </div>
+              <div class="text-center p-2">
+                <span id="hours" class="text-4xl md:text-5xl font-bold">0</span>
+                <span class="block text-sm mt-1">小時</span>
+              </div>
+              <div class="text-center p-2">
+                <span id="minutes" class="text-4xl md:text-5xl font-bold">0</span>
+                <span class="block text-sm mt-1">分鐘</span>
+              </div>
+              <div class="text-center p-2">
+                <span id="seconds" class="text-4xl md:text-5xl font-bold">0</span>
+                <span class="block text-sm mt-1">秒</span>
+              </div>
+            </div>
           </div>
-          <div id="topic-contents">
-            <!-- Topic details will be injected by JS -->
+          <div id="topics-wrapper" style="display: none">
+            <div class="flex flex-wrap justify-center gap-2 mb-8" id="topic-buttons">
+              <!-- Topic buttons will be injected by JS -->
+            </div>
+            <div id="topic-contents">
+              <!-- Topic details will be injected by JS -->
+            </div>
           </div>
         </div>
       </section>
@@ -218,7 +248,7 @@
           </div>
           <div class="section-card">
             <h3 class="text-2xl font-bold mb-6 text-center">豐厚獎勵</h3>
-            <div class="space-y-4">
+            <div class="space-y-4 bonus-container">
               <div class="p-4 bg-yellow-100 border-l-4 border-yellow-400 rounded-r-lg flex items-center">
                 <i class="fa-solid fa-trophy text-xl text-yellow-500 mr-3"></i>
                 <p class="font-bold text-lg">第一名：現金 3,000 元</p>
@@ -243,7 +273,7 @@
       <!-- Section 5: Impact -->
       <section id="impact" class="mb-16 md:mb-24 scroll-mt-20">
         <h2 class="text-3xl font-bold text-center mb-12">預算與預期效益</h2>
-        <div class="grid lg:grid-cols-2 gap-8 lg:gap-12 items-center">
+        <div class="grid *lg:grid-cols-2 gap-8 lg:gap-12 items-center">
           <div class="section-card order-2 lg:order-1">
             <h3 class="text-2xl font-bold mb-6 text-center">預期效益</h3>
             <ul class="space-y-4">
@@ -261,13 +291,13 @@
               </li>
               <li class="flex items-start">
                 <span class="text-teal-500 mr-3 mt-1">✓</span>
-                <div><strong class="font-semibold">公司形象：</strong>展現公司擁抱新科技、推動數位化的積極態度。</div>
+                <div><strong class="font-semibold">公司形象：</strong>展現公司擁抱新科技，推動數位化的積極態度。</div>
               </li>
             </ul>
           </div>
-          <div class="section-card order-1 lg:order-2">
+          <div class="section-card order-1 lg:order-2" style="display: none">
             <h3 class="text-2xl font-bold mb-2 text-center">預算規劃</h3>
-            <p class="text-center text-gray-500 mb-4">(以 30 人為例，總計約 12,000 元)</p>
+            <p class="text-center text-gray-500 mb-4">(以 20 人為例，總計約 12,000 元)</p>
             <div class="chart-container">
               <canvas id="budgetChart"></canvas>
             </div>
@@ -396,7 +426,7 @@
           });
         });
 
-        // Competition Topics Tabs
+        // Competition Topics Data & Logic
         const topicsData = [
           {
             title: "尾牙抽獎 APP",
@@ -470,51 +500,82 @@
           },
         ];
 
-        const topicButtonsContainer = document.getElementById("topic-buttons");
-        const topicContentsContainer = document.getElementById("topic-contents");
+        function initializeTopics() {
+          const topicButtonsContainer = document.getElementById("topic-buttons");
+          const topicContentsContainer = document.getElementById("topic-contents");
 
-        topicsData.forEach((topic, index) => {
-          const button = document.createElement("button");
-          button.className = "topic-button px-4 py-2 rounded-lg font-semibold text-gray-700 bg-gray-100 hover:bg-gray-200 flex items-center justify-center";
-          button.innerHTML = `<i class="${topic.icon} mr-2"></i> ${topic.title}`;
-          button.dataset.topicIndex = index;
-          if (index === 0) button.classList.add("active");
-          topicButtonsContainer.appendChild(button);
+          topicButtonsContainer.innerHTML = ""; // Clear placeholder
+          topicContentsContainer.innerHTML = ""; // Clear placeholder
 
-          const content = document.createElement("div");
-          content.className = "topic-details p-4 bg-gray-50 rounded-lg";
-          if (index === 0) content.classList.add("active");
-          content.dataset.topicIndex = index;
-          content.innerHTML = `
-                    <h4 class="text-xl font-bold text-gray-800 mb-2">${topic.title}</h4>
-                    <p class="text-gray-600 mb-4">${topic.concept}</p>
-                    <h5 class="font-bold mb-2">核心任務（6項）：</h5>
-                    <ul class="list-disc list-inside space-y-1 text-gray-700 mb-4">
-                        ${topic.tasks.map((task) => `<li>${task.replace(/\*\*(.*?)\*\*/g, '<strong class="font-semibold text-gray-800">$1</strong>')}</li>`).join("")}
-                    </ul>
-                    <div class="p-3 bg-teal-50 border-l-4 border-teal-300 rounded-r-md">
-                      <h5 class="font-bold text-teal-800">創意加分點：</h5>
-                      <p class="text-teal-700">${topic.spark}</p>
-                    </div>
-                `;
-          topicContentsContainer.appendChild(content);
-        });
+          topicsData.forEach((topic, index) => {
+            const button = document.createElement("button");
+            button.className = "topic-button px-4 py-2 rounded-lg font-semibold text-gray-700 bg-gray-100 hover:bg-gray-200 flex items-center justify-center";
+            button.innerHTML = `<i class="${topic.icon} mr-2"></i> ${topic.title}`;
+            button.dataset.topicIndex = index;
+            if (index === 0) button.classList.add("active");
+            topicButtonsContainer.appendChild(button);
 
-        topicButtonsContainer.addEventListener("click", (e) => {
-          let targetButton = e.target;
-          if (!targetButton.matches(".topic-button")) {
-            targetButton = targetButton.closest(".topic-button");
+            const content = document.createElement("div");
+            content.className = "topic-details p-4 bg-gray-50 rounded-lg text-left";
+            if (index === 0) content.classList.add("active");
+            content.dataset.topicIndex = index;
+            content.innerHTML = `
+                      <h4 class="text-xl font-bold text-gray-800 mb-2">${topic.title}</h4>
+                      <p class="text-gray-600 mb-4">${topic.concept}</p>
+                      <h5 class="font-bold mb-2">核心任務（6項）：</h5>
+                      <ul class="list-disc list-inside space-y-1 text-gray-700 mb-4">
+                          ${topic.tasks.map((task) => `<li>${task.replace(/\*\*(.*?)\*\*/g, '<strong class="font-semibold text-gray-800">$1</strong>')}</li>`).join("")}
+                      </ul>
+                      <div class="p-3 bg-teal-50 border-l-4 border-teal-300 rounded-r-md">
+                        <h5 class="font-bold text-teal-800">創意加分點：</h5>
+                        <p class="text-teal-700">${topic.spark}</p>
+                      </div>
+                  `;
+            topicContentsContainer.appendChild(content);
+          });
+
+          topicButtonsContainer.addEventListener("click", (e) => {
+            let targetButton = e.target;
+            if (!targetButton.matches(".topic-button")) {
+              targetButton = targetButton.closest(".topic-button");
+            }
+            if (targetButton) {
+              const index = targetButton.dataset.topicIndex;
+
+              topicButtonsContainer.querySelector(".active").classList.remove("active");
+              targetButton.classList.add("active");
+
+              topicContentsContainer.querySelector(".active").classList.remove("active");
+              topicContentsContainer.querySelector(`.topic-details[data-topic-index="${index}"]`).classList.add("active");
+            }
+          });
+        }
+
+        // Countdown Timer
+        const countdownDate = new Date("2025-11-02T00:00:00").getTime();
+        const countdownFunction = setInterval(function () {
+          const now = new Date().getTime();
+          const distance = countdownDate - now;
+
+          if (distance < 0) {
+            clearInterval(countdownFunction);
+            document.getElementById("countdown-wrapper").style.display = "none";
+            const topicsWrapper = document.getElementById("topics-wrapper");
+            topicsWrapper.style.display = "block";
+            initializeTopics();
+            return;
           }
-          if (targetButton) {
-            const index = targetButton.dataset.topicIndex;
 
-            topicButtonsContainer.querySelector(".active").classList.remove("active");
-            targetButton.classList.add("active");
+          const days = Math.floor(distance / (1000 * 60 * 60 * 24));
+          const hours = Math.floor((distance % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+          const minutes = Math.floor((distance % (1000 * 60 * 60)) / (1000 * 60));
+          const seconds = Math.floor((distance % (1000 * 60)) / 1000);
 
-            topicContentsContainer.querySelector(".active").classList.remove("active");
-            topicContentsContainer.querySelector(`.topic-details[data-topic-index="${index}"]`).classList.add("active");
-          }
-        });
+          document.getElementById("days").innerText = String(days).padStart(2, "0");
+          document.getElementById("hours").innerText = String(hours).padStart(2, "0");
+          document.getElementById("minutes").innerText = String(minutes).padStart(2, "0");
+          document.getElementById("seconds").innerText = String(seconds).padStart(2, "0");
+        }, 1000);
 
         // Smooth scrolling for nav links
         document.querySelectorAll('a[href^="#"]').forEach((anchor) => {
